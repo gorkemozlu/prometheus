@@ -351,7 +351,7 @@ spec:
     spec:
       containers:
       - name: alertmanager
-        image: quay.io/prometheus/alertmanager:v0.7.1
+        image: docker pull harbor.pks.migros.local/poc/alertmanager:v0.7.1
         args:
           - '-config.file=/etc/alertmanager/config.yml'
           - '-storage.path=/alertmanager'
@@ -412,7 +412,7 @@ spec:
         component: core
     spec:
       containers:
-      - image: grafana/grafana:4.2.0
+      - image:  harbor.pks.migros.local/poc/grafana:4.2.0
         name: grafana-core
         imagePullPolicy: IfNotPresent
         # env:
@@ -2318,7 +2318,7 @@ spec:
       serviceAccountName: prometheus-k8s
       initContainers:
       - name: wait-for-grafana
-        image: giantswarm/tiny-tools
+        image: harbor.pks.migros.local/poc/tiny-tools:latest
         args:
         - /bin/sh
         - -c
@@ -2330,7 +2330,7 @@ spec:
           done
       containers:
       - name: grafana-import-dashboards
-        image: giantswarm/tiny-tools
+        image: harbor.pks.migros.local/poc/tiny-tools:latest
         command: ["/bin/sh", "-c"]
         workingDir: /opt/grafana-import-dashboards
         args:
@@ -2572,7 +2572,7 @@ spec:
       serviceAccountName: prometheus-k8s
       containers:
       - name: prometheus
-        image: prom/prometheus:v1.7.0
+        image: harbor.pks.migros.local/poc/prometheus:v1.7.0
         args:
           - '-storage.local.retention=12h'
           - '-storage.local.memory-chunks=500000'
