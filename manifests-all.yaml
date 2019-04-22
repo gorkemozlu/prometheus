@@ -5,6 +5,104 @@ kind: Namespace
 metadata:
   name: monitoring
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: config-volume
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: templates-volume
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: alertmanager
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi      
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: grafana-persistent-storage
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: config-volume
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: host-fs-var
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: metrics
+  namespace: monitoring
+  annotations:
+    volume.beta.kubernetes.io/storage-class: vsphere-default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -351,7 +449,7 @@ spec:
     spec:
       containers:
       - name: alertmanager
-        image: docker pull harbor.pks.migros.local/poc/alertmanager:v0.7.1
+        image: harbor.pks.migros.local/poc/alertmanager:v0.7.1
         args:
           - '-config.file=/etc/alertmanager/config.yml'
           - '-storage.path=/alertmanager'
@@ -2616,7 +2714,7 @@ spec:
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: gcr.io/google_containers/kube-state-metrics:v0.5.0
+        image: harbor.pks.migros.local/poc/kube-state-metrics:v0.5.0
         ports:
         - containerPort: 8080
 ---
@@ -2708,7 +2806,7 @@ spec:
     spec:
       containers:
       - name: read-du
-        image: giantswarm/tiny-tools
+        image: harbor.pks.migros.local/poc/tiny-tools
         imagePullPolicy: Always
         # FIXME threshold via env var
         # The
@@ -2733,7 +2831,7 @@ spec:
         - name: metrics
           mountPath: /tmp
       - name: caddy
-        image: dockermuenster/caddy:0.9.3
+        image: harbor.pks.migros.local/poc/caddy:0.9.3
         command:
         - "caddy"
         - "-port=9102"
@@ -2768,7 +2866,7 @@ spec:
         component: node-exporter
     spec:
       containers:
-      - image: prom/node-exporter:v0.14.0
+      - image: harbor.pks.migros.local/poc/node-exporter:v0.14.0
         name: prometheus-node-exporter
         ports:
         - name: prom-node-exp
